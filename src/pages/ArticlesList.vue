@@ -1,38 +1,75 @@
 <template>
   <div class="articles">
-    <h1>Новости</h1>
-    <ul class="articles__list">
-      <li class="articles__item" v-for="news in newList" :key="news.id">
-        <router-link :to="{ name: 'ArticleDetails', params: { id: news.id } }">
-          <img :src="`${news.preview_image}`" alt="preview image" />
-          {{ news.name }}
-        </router-link>
-      </li>
-    </ul>
+    <v-container>
+      <menu-bar></menu-bar>
+      <h1 class="mb-5">Новости</h1>
+      <v-row>
+        <v-col
+          cols="12"
+          sm="6"
+          md="4"
+          v-for="article in articlesList"
+          :key="article.id"
+        >
+          <v-card class="fill-height mx-3">
+            <v-img
+              class="white--text align-end"
+              height="200px"
+              :src="`${article.preview_image}`"
+              alt="image"
+            />
+
+            <v-card-subtitle class="pb-0">
+              {{ article.data }}
+            </v-card-subtitle>
+
+            <v-card-text class="text--primary">
+              <div>{{ article.name }}</div>
+
+              <div>{{ article.shortDesc }}</div>
+            </v-card-text>
+
+            <v-card-actions>
+              <router-link
+                color="orange"
+                text
+                :to="{
+                  name: 'ArticleDetails',
+                  params: { id: article.id },
+                }"
+              >
+                <v-btn color="orange" text> Подробности </v-btn>
+              </router-link>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import MenuBar from "../components/MenuBar.vue";
 
 export default {
   name: "ArticlesList",
+  components: { MenuBar },
   props: {},
   data() {
     return {
-      newList: [],
+      articlesList: [],
     };
   },
   async created() {
-    await this.getNews();
+    await this.getArticles();
   },
   methods: {
-    getNews: async function () {
+    getArticles: async function () {
       await axios
         .get("/articles.json")
         .then((response) => {
-          console.log(response);
-          this.newList = response.data;
+          this.articlesList = response.data;
         })
         .catch(function (error) {
           console.log(error);
