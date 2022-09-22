@@ -11,9 +11,15 @@
 <script>
 export default {
   name: "MySlider",
-  props: {
-    sliderList: Array,
+  data: () => ({
+    sliderList: [],
+  }),
+
+  computed: {},
+
+  async created() {
+    await this.$store.dispatch("getArticles");
+    this.sliderList = this.$store.getters.getSliderList;
   },
-  data: () => ({}),
 };
 </script>

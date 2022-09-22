@@ -2,18 +2,18 @@
   <div class="article-details">
     <v-container>
       <menu-bar></menu-bar>
-      <h1 class="article-details__name mb-5">Название: {{ articles.name }}</h1>
+      <h1 class="article-details__name mb-5">Название: {{ article.name }}</h1>
       <v-img
         class="white--text align-end rounded-lg mb-3"
         height="300px"
         max-width="400px"
-        :src="`${articles.full_image}`"
+        :src="`${article.full_image}`"
         alt="image"
       />
       <p class="article-details__description mb-3">
-        Описание: {{ articles.desc }}
+        Описание: {{ article.desc }}
       </p>
-      <p class="article-datails__date">Дата: {{ articles.date }}</p>
+      <p class="article-datails__date">Дата: {{ article.date }}</p>
       <h2>Комментарии</h2>
       <v-list>
         <v-row>
@@ -48,57 +48,40 @@
       <h2>Оставить комментарий</h2>
       <form>
         <v-text-field
-          v-model="comment"
-          :error-messages="commentErrors"
           label="Текст комментария"
           required
           @input="$v.email.$touch()"
           @blur="$v.email.$touch()"
         ></v-text-field>
         <v-checkbox
-          v-model="checkbox"
-          :error-messages="checkboxErrors"
           label="Do you agree?"
           required
           @change="$v.checkbox.$touch()"
           @blur="$v.checkbox.$touch()"
         ></v-checkbox>
 
-        <v-btn class="mr-4" @click="submit"> Отправить </v-btn>
-        <v-btn @click="clear"> Очистить </v-btn>
+        <v-btn class="mr-4"> Отправить </v-btn>
+        <v-btn> Очистить </v-btn>
       </form>
     </v-container>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import MenuBar from "../components/MenuBar.vue";
 
 export default {
   name: "ArticleDetails",
   components: { MenuBar },
   props: ["id"],
-  data() {
-    return {
-      articles: [],
-    };
-  },
+  data: () => ({
+    article: [],
+  }),
   async created() {
-    await this.getArticlesById();
+    await this.$store.dispatch("getArticles");
+    this.article = this.$store.getters.getArticleById(this.id);
   },
-  methods: {
-    getArticlesById: async function () {
-      await axios
-        .get("/articles.json")
-        .then((response) => {
-          this.articles = response.data[this.id - 1];
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-  },
+  methods: {},
 };
 </script>
 

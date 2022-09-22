@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
 import MenuBar from "../components/MenuBar.vue";
 
 export default {
@@ -30,23 +30,17 @@ export default {
   }),
   props: {},
   async created() {
-    await this.getImages();
+    await this.$store.dispatch("getArticles");
+    this.getImages();
   },
   methods: {
-    getImages: async function () {
-      await axios
-        .get("/articles.json")
-        .then((response) => {
-          response.data.map((article) => {
-            this.imagesList = [
-              ...this.imagesList,
-              { src: article.full_image, id: article.id },
-            ];
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    getImages() {
+      this.$store.state.articlesList.map((article) => {
+        this.imagesList = [
+          ...this.imagesList,
+          { src: article.full_image, id: article.id },
+        ];
+      });
     },
   },
 };

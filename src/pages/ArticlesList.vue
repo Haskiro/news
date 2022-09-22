@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import MenuBar from "../components/MenuBar.vue";
 
 export default {
@@ -57,23 +56,15 @@ export default {
   components: { MenuBar },
   props: {},
   data() {
-    return {
-      articlesList: [],
-    };
+    return {};
   },
   async created() {
-    await this.getArticles();
+    await this.$store.dispatch("getArticles");
   },
-  methods: {
-    getArticles: async function () {
-      await axios
-        .get("/articles.json")
-        .then((response) => {
-          this.articlesList = response.data;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+  methods: {},
+  computed: {
+    articlesList() {
+      return this.$store.state.articlesList;
     },
   },
 };
