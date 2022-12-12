@@ -1,4 +1,10 @@
-# laba1
+# News
+
+## About Project
+- Vue2
+- vue-router
+- VueX
+- Vuetify
 
 ## Project setup
 ```
